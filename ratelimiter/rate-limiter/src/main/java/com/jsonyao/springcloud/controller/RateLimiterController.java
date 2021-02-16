@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit;
 public class RateLimiterController {
 
     /**
-     * Guava限流组件: 单机版
+     * Guava限流组件: 单机版, 只在当前类/当前主机内限流, 不可作用于分布式限流, 但可用于对单机资源进行限制(比如计算量的接口可以进行限流)
      */
     RateLimiter rateLimiter = RateLimiter.create(2.0);
 
     /**
-     * 测试非阻塞限流: 初始访问存在预热令牌, 立即成功; 其余时匀速产生2个令牌/1s, 获取不到则快速失败
+     * 测试同步非阻塞限流: 初始访问存在预热令牌, 立即成功; 其余时匀速产生2个令牌/1s, 获取不到则快速失败
      * @param count
      * @return
      */
@@ -38,7 +38,7 @@ public class RateLimiterController {
     }
 
     /**
-     * 测试限定时间的非阻塞限流: 初始访问存在预热令牌, 立即成功; 其余时匀速产生2个令牌/1s, 10个/5s会同步阻塞, 100个/5s则会立即返回失败
+     * 测试限定时间的同步非阻塞限流: 初始访问存在预热令牌, 立即成功; 其余时匀速产生2个令牌/1s, 10个/5s会同步阻塞, 100个/5s则会立即返回失败
      * @param count
      * @return
      */
@@ -51,5 +51,17 @@ public class RateLimiterController {
             log.info("fail, rate is {}", rateLimiter.getRate());
             return "fail";
         }
+    }
+
+    /**
+     * 测试同步阻塞限流: 当令牌不足够时, 会同步阻塞获取令牌个数, 直到令牌足够才返回
+     * @param count
+     * @return
+     */
+    @GetMapping("/acquire")
+    public String acquire(Integer count){
+        rateLimiter.acquire(count);// 0.0 if not rate-limited
+        log.info("success, rate is {}", rateLimiter.getRate());
+        return "success";
     }
 }
