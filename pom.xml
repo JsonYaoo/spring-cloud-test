@@ -9,6 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>ratelimiter/rate-limiter</module>
+        <module>ratelimiter/ratelimiter-annotation</module>
+        <module>ratelimiter/ratelimiter-test</module>
     </modules>
     <packaging>pom</packaging>
 
