@@ -11,6 +11,7 @@
         <module>ratelimiter/rate-limiter</module>
         <module>ratelimiter/ratelimiter-annotation</module>
         <module>ratelimiter/ratelimiter-test</module>
+        <module>eureka/eureka-server</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -48,6 +49,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.0</version>
+                <!-- 配置JDK代码和运行期版本: 加入后不会报代码版本不一致的错误 -->
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
