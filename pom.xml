@@ -12,6 +12,7 @@
         <module>ratelimiter/ratelimiter-annotation</module>
         <module>ratelimiter/ratelimiter-test</module>
         <module>eureka/eureka-server</module>
+        <module>eureka/eureka-client</module>
     </modules>
     <packaging>pom</packaging>
 
