@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Slf4j
-public class Controller {
+public class ProviderController {
 
     @Value("${server.port}")
     private String port;
