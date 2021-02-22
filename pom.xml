@@ -17,6 +17,7 @@
         <module>eureka/eureka-server-peer1</module>
         <module>eureka/eureka-server-peer2</module>
         <module>ribbon/ribbon-consumer</module>
+        <module>feign/feign-consumer</module>
     </modules>
     <packaging>pom</packaging>
 
