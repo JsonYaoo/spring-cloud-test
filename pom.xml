@@ -19,6 +19,7 @@
         <module>ribbon/ribbon-consumer</module>
         <module>feign/feign-consumer</module>
         <module>feign/feign-client-intf</module>
+        <module>feign/feign-client</module>
     </modules>
     <packaging>pom</packaging>
 
