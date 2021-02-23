@@ -14,15 +14,42 @@ public class FeignClientController implements ICommonService {
     @Value("${server.port}")
     private String port;
 
+    /**
+     * Feign接口Get方法测试
+     * @return
+     */
     @Override
     public String sayHi() {
         return "This is " + port;
     }
 
+    /**
+     * Feign接口Post方法测试
+     * @param friend
+     * @return
+     */
     @Override
     public Friend sayHiPost(Friend friend) {
         log.info("You are " + friend.getName());
         friend.setPort(port);
         return friend;
+    }
+
+    /**
+     * Feign超时与重试测试
+     * @param timeout
+     * @return
+     */
+    @Override
+    public String retry(int timeout) {
+        while (timeout-- > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
+        }
+        log.info("retry: " + port);
+        return "retry: " + port;
     }
 }

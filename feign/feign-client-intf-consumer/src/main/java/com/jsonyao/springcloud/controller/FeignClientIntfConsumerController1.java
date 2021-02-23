@@ -2,8 +2,6 @@ package com.jsonyao.springcloud.controller;
 
 import com.jsonyao.springcloud.entity.Friend;
 import com.jsonyao.springcloud.service.ICommonService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +19,33 @@ public class FeignClientIntfConsumerController1 {
     @Resource
     private ICommonService iCommonService;
 
+    /**
+     * Feign接口Get方法测试
+     * @return
+     */
     @GetMapping("/sayHi")
     public String sayHi() {
         return iCommonService.sayHi();
     }
 
+    /**
+     * Feign接口Post方法测试
+     * @param friend
+     * @return
+     */
     @PostMapping("/sayHiPost")
     public Friend sayHiPost(@RequestBody Friend friend) {
         return iCommonService.sayHiPost(friend);
+    }
+
+    /**
+     * Feign超时与重试测试
+     * @param timeout
+     * @return
+     */
+    @GetMapping("/retry")
+    public String retry(int timeout) {
+        // 超时到最后会抛出: feign.RetryableException
+        return iCommonService.retry(timeout);
     }
 }
