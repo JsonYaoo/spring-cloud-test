@@ -20,6 +20,7 @@
         <module>feign/feign-consumer</module>
         <module>feign/feign-client-intf</module>
         <module>feign/feign-client</module>
+        <module>feign/feign-client-intf-consumer</module>
     </modules>
     <packaging>pom</packaging>
 

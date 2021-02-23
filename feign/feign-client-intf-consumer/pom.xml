@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud-test</artifactId>
+        <groupId>com.jsonyao</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>feign-client-intf-consumer</artifactId>
+    <name>feign-client-intf-consumer</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jsonyao</groupId>
+            <artifactId>feign-client-intf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 如果下游调用方的Feign版本不一致, 也还可以清除Feign公共接口的依赖, 然后再重新导入自己版本的依赖 -->
+        <!--<dependency>-->
+            <!--<groupId>com.jsonyao</groupId>-->
+            <!--<artifactId>feign-client-intf</artifactId>-->
+            <!--<version>${project.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.springframework.cloud</groupId>-->
+                    <!--<artifactId>spring-cloud-starter-openfeign</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.cloud</groupId>-->
+            <!--<artifactId>spring-cloud-starter-openfeign</artifactId>-->
+        <!--</dependency>-->
+    </dependencies>
+</project>
