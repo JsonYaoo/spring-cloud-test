@@ -1,6 +1,6 @@
-package com.imooc.springcloud.controller;
+package com.jsonyao.springcloud.controller;
 
-import com.imooc.springcloud.service.IService;
+import com.jsonyao.springcloud.service.IService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

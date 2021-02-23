@@ -1,4 +1,4 @@
-package com.imooc.springcloud.service;
+package com.jsonyao.springcloud.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.imooc.springcloud;
+package com.jsonyao.springcloud;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
