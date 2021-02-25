@@ -37,9 +37,17 @@ public interface ICommonService {
     public String retry(@RequestParam("timeout") int timeout);
 
     /**
-     * Hystrix降级测试
+     * Hystrix直接异常降级测试
      * @return
      */
     @GetMapping("/error")
     public String error();
+
+    /**
+     * Hystrix超时降级测试
+     * @param timeout
+     * @return
+     */
+    @PostMapping("/timeout")
+    public String timeout(@RequestParam("timeout") int timeout);
 }

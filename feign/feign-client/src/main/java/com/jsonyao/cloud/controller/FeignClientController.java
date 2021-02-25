@@ -46,7 +46,7 @@ public class FeignClientController implements ICommonService {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-
+                // do nothing
             }
         }
         log.info("retry: " + port);
@@ -60,5 +60,22 @@ public class FeignClientController implements ICommonService {
     @Override
     public String error() {
         throw new RuntimeException("black sheep!");
+    }
+
+    /**
+     * Feign超时与重试测试
+     * @param timeout
+     * @return
+     */
+    @Override
+    public String timeout(int timeout) {
+        try {
+            Thread.sleep(timeout * 1000);
+        } catch (InterruptedException e) {
+            log.info("You are sleep interrupted!");
+        }
+
+        log.info("You are interrupted!");
+        return "retry: " + port;
     }
 }
