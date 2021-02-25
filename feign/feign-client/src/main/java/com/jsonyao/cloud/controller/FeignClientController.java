@@ -52,4 +52,13 @@ public class FeignClientController implements ICommonService {
         log.info("retry: " + port);
         return "retry: " + port;
     }
+
+    /**
+     * Hystrix降级测试
+     * @return
+     */
+    @Override
+    public String error() {
+        throw new RuntimeException("black sheep!");
+    }
 }
