@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * 测试HystrixFallback降级服务: 降级接收类
  */
+// 降级实现类必须交由Spring管理, 不然会报依赖缺少错误
 @Component
 @Slf4j
 public class IFallbackHandler implements IHystrixFallbackService {
