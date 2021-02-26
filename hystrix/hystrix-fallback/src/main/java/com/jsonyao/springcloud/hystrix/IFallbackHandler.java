@@ -54,6 +54,9 @@ public class IFallbackHandler implements IHystrixFallbackService {
      * => 测试结果: 多级降级成功, 发现: Hystrix降级流程中, 如果抛出RuntimeException, 是不会被抛出去的, 所以控制台不会显示异常信息
      * @return
      */
+    // 经测试, 降级后再调用自己, 首先会多次调用自己, 最后抛出Feign Hystrix异常的: IHystrixFallbackService#sayHi() failed and fallback failed.
+    // => exception: 'class java.lang.RuntimeException' occurred in fallback wasn't ignored. => 可见, 如果正常配置多级降级的话, Hystrix确实会忽略其中的RuntimeException
+//    @HystrixCommand(fallbackMethod = "sayHi")
     @HystrixCommand(fallbackMethod = "fallback2")
     @Override
     public String sayHi() {
