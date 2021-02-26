@@ -2,21 +2,17 @@ package com.jsonyao.springcloud.hystrix;
 
 import com.jsonyao.springcloud.entity.Friend;
 import com.jsonyao.springcloud.service.IHystrixFallbackService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
  * 测试HystrixFallback降级服务: 降级接收类
  */
-// 降级实现类必须交由Spring管理, 不然会报依赖缺少错误
+// 降级实现类必须交由Spring管理, 不然会报依赖缺少错误: 其实继承IHystrixFallbackService并不好, 降级不依赖继承关系的
 @Component
 @Slf4j
 public class IFallbackHandler implements IHystrixFallbackService {
-
-    @Override
-    public String sayHi() {
-        return null;
-    }
 
     @Override
     public Friend sayHiPost(Friend friend) {
@@ -51,5 +47,36 @@ public class IFallbackHandler implements IHystrixFallbackService {
     @Override
     public String timeout(int timeout) {
         return "You are late!";
+    }
+
+    /**
+     * 测试多级服务降级: 一级降级, 这里以直接异常降级为例
+     * => 测试结果: 多级降级成功, 发现: Hystrix降级流程中, 如果抛出RuntimeException, 是不会被抛出去的, 所以控制台不会显示异常信息
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "fallback2")
+    @Override
+    public String sayHi() {
+        log.info("fall back again...");
+        throw new RuntimeException("black sheep2!");
+    }
+
+    /**
+     * 测试多级服务降级: 二级降级, 这里以直接异常降级为例
+     * @return
+     */
+    @HystrixCommand(fallbackMethod = "fallback3")
+    public String fallback2() {
+        log.info("fall back again and again...");
+        throw new RuntimeException("black sheep3!");
+    }
+
+    /**
+     * 测试多级服务降级: 三级降级, 这里以直接异常降级为例
+     * @return
+     */
+    public String fallback3() {
+        log.info("Fallback: I'm not a black sheep any more.");
+        return "Fallback: I'm not a black sheep any more.";
     }
 }

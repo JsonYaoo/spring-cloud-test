@@ -20,7 +20,7 @@ public class FeignClientController implements ICommonService {
      */
     @Override
     public String sayHi() {
-        return "This is " + port;
+        throw new RuntimeException("black sheep!");
     }
 
     /**

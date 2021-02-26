@@ -80,4 +80,13 @@ public class HystrixFallbackController {
 
         return friend;
     }
+
+    /**
+     * Hystrix多级降级测试: 以直接降级为例
+     * @return
+     */
+    @GetMapping("/sayHi")
+    public String sayHi(){
+        return iHystrixFallbackService.sayHi();
+    }
 }
