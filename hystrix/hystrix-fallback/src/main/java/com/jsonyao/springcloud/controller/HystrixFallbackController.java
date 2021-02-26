@@ -3,6 +3,8 @@ package com.jsonyao.springcloud.controller;
 import com.jsonyao.springcloud.entity.Friend;
 import com.jsonyao.springcloud.service.IHystrixFallbackService;
 import com.jsonyao.springcloud.service.IRequestCacheService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import lombok.Cleanup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,32 @@ public class HystrixFallbackController {
         // 使用Lombok关闭:  打开Hystrix上下文 => 测试结果: 还是失败, 打断线程并没奏效, Feign接口超时Hystrix降级时, 并不会打断原来线程
 //        @Cleanup HystrixRequestContext hystrixRequestContext = HystrixRequestContext.initializeContext();
         return iHystrixFallbackService.timeout(timeout);
+    }
+
+    /**
+     * Hystrix超时降级测试3: 这里降级的不是服务, 而是控制器本身的方法
+     * => 测试结果: 降级成功, 但是如果控制器配置的与服务配置的超时时长一样大, 那么是触发控制器的降级方法; 否则, 触发配置时长小的降级方法
+     * @return
+     */
+    @HystrixCommand(
+            fallbackMethod = "timeout3Fallback",
+            commandProperties = {
+                    // 3. Hystrix超时策略: 指定服务中某个方法的超时配置(优先级比全局的高)
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value="3000")
+            }
+    )
+    @PostMapping("/timeout3")
+    public String timeout3(Integer timeout) {
+        return iHystrixFallbackService.timeout(timeout);
+    }
+
+    /**
+     * Hystrix超时降级测试3: 测试3降级的方法, 可以为private
+     * @param timeout
+     * @return
+     */
+    private String timeout3Fallback(Integer timeout) {
+        return "success";
     }
 
     /**
