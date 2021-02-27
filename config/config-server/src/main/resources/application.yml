@@ -1,0 +1,22 @@
+server:
+  port: 60000
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    # 配置注册中心
+    config:
+      server:
+        # 使用git方式拉取配置文件
+        git:
+          # 强制拉取资源文件, 默认为false
+          force-pull: true
+          # git仓库地址
+          uri: https://github.com/JsonYaoo/config-repo.git
+          # git仓库下配置文件所在的子目录名称: eg => abc, def...
+#          search-paths:
+          # 仓库登录用户名: public项目不需要
+#          username:
+          # 仓库登录用户密码: public项目不需要
+#          password:
