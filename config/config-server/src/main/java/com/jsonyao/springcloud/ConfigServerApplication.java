@@ -6,7 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.config.server.EnableConfigServer;
 
 /**
- * 注册中心: 可拉取配置文件
+ * 配置中心: 可拉取远端的配置文件
  */
 @SpringBootApplication
 @EnableConfigServer

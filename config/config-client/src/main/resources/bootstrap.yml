@@ -1,0 +1,19 @@
+server:
+  port: 61000
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      # 指定拉取配置中心中配置文件的applicationName, 默认为spring application name
+      name: config-consumer
+      # 指定配置中心地址
+      uri: http://localhost:60000
+      # 指定拉取的配置文件profile, 但一般是在环境中配置(比如args或者系统环境变量中设置)
+      profile: prod
+      # 指定拉取的配置文件所在的分支, 默认为master
+      label: master
+
+# 通过拉取到的配置文件中的配置属性, 注入到本地的配置变量中
+myWords: ${words}

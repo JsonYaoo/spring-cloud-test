@@ -10,14 +10,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>config-server</artifactId>
-    <name>config-server</name>
+    <artifactId>config-client</artifactId>
+    <name>config-client</name>
 
-    <!-- 配置中心化的配置中心: 可拉取远端的配置文件 -->
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 配置配置中心的客户端: 拉取配置中心的配置文件属性 -->
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-config-server</artifactId>
+            <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
     </dependencies>
 </project>

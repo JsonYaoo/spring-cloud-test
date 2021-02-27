@@ -5,7 +5,7 @@ spring:
   application:
     name: config-server
   cloud:
-    # 配置注册中心
+    # 配置配置中心
     config:
       server:
         # 使用git方式拉取配置文件
