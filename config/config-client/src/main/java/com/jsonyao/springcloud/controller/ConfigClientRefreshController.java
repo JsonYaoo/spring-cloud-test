@@ -22,11 +22,26 @@ public class ConfigClientRefreshController {
     private String words;
 
     /**
+     * 测试配置中心使用秘钥进行解密
+     */
+    @Value("${food}")
+    private String food;
+
+    /**
      * 测试配置中心动态刷新到本地配置文件的配置属性
      * @return
      */
     @GetMapping("/words")
     public String getWords(){
         return words;
+    }
+
+    /**
+     * 测试配置中心使用秘钥进行解密
+     * @return
+     */
+    @GetMapping("/dinner")
+    public String dinner(){
+        return "May I have on " + food;
     }
 }
