@@ -8,12 +8,22 @@ spring:
     config:
       # 指定拉取配置中心中配置文件的applicationName, 默认为spring application name
       name: config-consumer
-      # 指定配置中心地址
-      uri: http://localhost:60000
+      # 指定基础版的配置中心地址
+#      uri: http://localhost:60000
+      # 指定高可用的配置中心ID
+      discovery:
+        enabled: true
+        service-id: config-server-eureka
       # 指定拉取的配置文件profile, 但一般是在环境中配置(比如args或者系统环境变量中设置)
       profile: prod
       # 指定拉取的配置文件所在的分支, 默认为master
       label: master
+
+# Eureka注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
 
 # Actuator配置: 这里主要是为了能够动态刷新配置文件:
 management:
