@@ -15,5 +15,18 @@ spring:
       # 指定拉取的配置文件所在的分支, 默认为master
       label: master
 
+# Actuator配置: 这里主要是为了能够动态刷新配置文件:
+management:
+  # 已过期, 可不配
+#  security:
+#    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
 # 通过拉取到的配置文件中的配置属性, 注入到本地的配置变量中
 myWords: ${words}
