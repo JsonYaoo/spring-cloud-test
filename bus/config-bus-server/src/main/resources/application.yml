@@ -1,0 +1,47 @@
+server:
+  port: 60002
+
+spring:
+  application:
+    name: config-bus-server
+  # 配置Rabbitmq
+  rabbitmq:
+    host: 192.168.1.111
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    # 配置配置中心
+    config:
+      server:
+        # 使用git方式拉取配置文件
+        git:
+          # 强制拉取资源文件, 默认为false
+          force-pull: true
+          # git仓库地址
+          uri: https://github.com/JsonYaoo/config-repo.git
+          # git仓库下配置文件所在的子目录名称: eg => abc, def...
+#          search-paths:
+          # 仓库登录用户名: public项目不需要
+#          username:
+          # 仓库登录用户密码: public项目不需要
+#          password:
+
+# Eureka注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+
+# Actuator配置: 这里主要是为了能够动态刷新配置文件:
+management:
+  # 已过期, 可不配
+#  security:
+#    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
