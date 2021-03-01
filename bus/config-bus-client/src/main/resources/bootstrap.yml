@@ -1,0 +1,51 @@
+server:
+  port: 61002
+
+spring:
+  application:
+    name: config-bus-client
+  # 配置Rabbitmq
+  rabbitmq:
+    host: 192.168.1.111
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      # 指定默认消息Binder(同时使用多个Binder时才需要指定): rabbit/kafka
+      default-binder: rabbit
+    config:
+      # 指定拉取配置中心中配置文件的applicationName, 默认为spring application name
+      name: config-consumer
+      # 指定基础版的配置中心地址
+#      uri: http://localhost:60000
+      # 指定高可用的配置中心ID
+      discovery:
+        enabled: true
+        service-id: config-bus-server
+      # 指定拉取的配置文件profile, 但一般是在环境中配置(比如args或者系统环境变量中设置)
+      profile: prod
+      # 指定拉取的配置文件所在的分支, 默认为master
+      label: master
+
+# Eureka注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+
+# Actuator配置: 这里主要是为了能够动态刷新配置文件:
+management:
+  # 已过期, 可不配
+#  security:
+#    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+# 通过拉取到的配置文件中的配置属性, 注入到本地的配置变量中
+myWords: ${words}
