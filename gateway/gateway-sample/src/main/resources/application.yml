@@ -12,6 +12,18 @@ spring:
           enabled: true
           # 使用小写的服务ID(默认为大写): 配置后Gateway对大写的服务ID将不生效, 自定义的路由规则可以实现既大写又小写
           lower-case-service-id: true
+      # 配置自定义路由规则
+      routes:
+      # 设置路由ID列表(不允许重复?)
+      - id: feignclient
+        predicates:
+        # 设置路径断言列表: 匹配yml的所有请求都会被转发到下面的uri(可以配置多个路由断言共同作用)
+        - Path=/yml/**
+        filters:
+        # 设置路由过滤器: 截去路径断言中的path, 拼接uri进行转发(可以配置多个过滤器共同作用)
+        - StripPrefix=1
+        # 设置转发路径/服务
+        uri: lb://FEIGN-CLIENT
 
 # Eureka注册中心地址
 eureka:
