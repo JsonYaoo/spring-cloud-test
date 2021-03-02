@@ -1,0 +1,33 @@
+server:
+  port: 65000
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      # 配置Gateway使用其能够自动定位从Eureka发现到的服务(不配置时使用默认的路由规则)
+      discovery:
+        locator:
+          enabled: true
+          # 使用小写的服务ID(默认为大写): 配置后Gateway对大写的服务ID将不生效, 自定义的路由规则可以实现既大写又小写
+          lower-case-service-id: true
+
+# Eureka注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+
+# Actuator配置: 这里主要是为了能够动态刷新配置文件:
+management:
+  # 已过期, 可不配
+#  security:
+#    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
