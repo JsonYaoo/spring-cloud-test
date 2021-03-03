@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 
+import java.time.ZonedDateTime;
+
 /**
  * Gateway配置测试类: 测试自定义路由规则
  */
@@ -17,13 +19,15 @@ public class GatewayConfiguration {
     @Order
     public RouteLocator customizedRoutes(RouteLocatorBuilder routeLocatorBuilder){
         return routeLocatorBuilder.routes()
-                .route(p ->
+                // 第一个路由规则
+                .route(r ->
                         // 配置路径断言
-                        p.path("/java/**")
+                        r.path("/java/**")
                         // 配置请求方法断言
                         .and().method(HttpMethod.POST)
                         // 配置header断言
                         .and().header("name")
+                        // 配置过滤器
                         .filters(f ->
                                 // 配置截去再拼接过滤器
                                 f.stripPrefix(1)
@@ -32,6 +36,21 @@ public class GatewayConfiguration {
                         )
                         // 配置转发uri
                         .uri("lb://FEIGN-CLIENT")
-                ).build();
+                )
+                // 第二个路由规则
+                .route(r ->
+                        // 配置路径断言
+                        r.path("/seckill/**")
+                                // 配置After断言: 服务器启动后的2分钟生效
+                                .and().after(ZonedDateTime.now().plusMinutes(2))
+                                // 配置过滤器
+                                .filters(f ->
+                                        // 配置截去再拼接过滤器
+                                        f.stripPrefix(1)
+                                )
+                                // 配置转发uri
+                                .uri("lb://FEIGN-CLIENT")
+                )
+                .build();
     }
 }
