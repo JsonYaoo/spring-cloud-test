@@ -40,7 +40,7 @@ public class GatewayConfiguration {
                                 // 配置响应header过滤器
                                 .addResponseHeader("java-param", "gateway-config")
                                 // 利用Gateway实现Zuul After Filter
-                                .filter(timerFilter)
+//                                .filter(timerFilter)
                         )
                         // 配置转发uri
                         .uri("lb://FEIGN-CLIENT")
