@@ -1,5 +1,7 @@
 package com.jsonyao.springcloud.config;
 
+import com.jsonyao.springcloud.filter.TimerFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +16,10 @@ import java.time.ZonedDateTime;
  */
 @Configuration
 public class GatewayConfiguration {
+
+    // 利用Gateway实现Zuul After Filter
+    @Autowired
+    private TimerFilter timerFilter;
 
     @Bean
     @Order
@@ -33,6 +39,8 @@ public class GatewayConfiguration {
                                 f.stripPrefix(1)
                                 // 配置响应header过滤器
                                 .addResponseHeader("java-param", "gateway-config")
+                                // 利用Gateway实现Zuul After Filter
+                                .filter(timerFilter)
                         )
                         // 配置转发uri
                         .uri("lb://FEIGN-CLIENT")
