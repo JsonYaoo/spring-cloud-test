@@ -1,6 +1,5 @@
-package com.jsonyao.springcloud.config;
+package com.jsonyao.springcloud;
 
-import com.jsonyao.springcloud.filter.TimerFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -15,11 +14,19 @@ import java.time.ZonedDateTime;
  * Gateway配置测试类: 测试自定义路由规则
  */
 @Configuration
+// @ConditionalOnBean没用, 注入的AuthFilter还是为null => 解决方式: GatewayConfiguration必须与自定义的Filter在同级目录注入时才不会为null
+//@ConditionalOnBean({TimerFilter.class, AuthFilter.class})
 public class GatewayConfiguration {
 
     // 利用Gateway实现Zuul After Filter
     @Autowired
     private TimerFilter timerFilter;
+
+    /**
+     * 测试网关JWT鉴权过滤器
+     */
+    @Autowired
+    private AuthFilter authFilter;
 
     @Bean
     @Order
@@ -40,7 +47,9 @@ public class GatewayConfiguration {
                                 // 配置响应header过滤器
                                 .addResponseHeader("java-param", "gateway-config")
                                 // 利用Gateway实现Zuul After Filter
-//                                .filter(timerFilter)
+                                .filter(timerFilter)
+                                // 测试网关JWT鉴权
+                                .filter(authFilter)
                         )
                         // 配置转发uri
                         .uri("lb://FEIGN-CLIENT")

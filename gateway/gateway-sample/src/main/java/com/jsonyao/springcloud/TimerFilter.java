@@ -1,9 +1,8 @@
-package com.jsonyao.springcloud.filter;
+package com.jsonyao.springcloud;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -16,9 +15,9 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 // 路由过滤器
-//public class TimerFilter implements GatewayFilter, Ordered {
-// 全局Global过滤器
-public class TimerFilter implements GlobalFilter, Ordered {
+public class TimerFilter implements GatewayFilter, Ordered {
+// 全局Global过滤器 GlobalFilter
+//public class TimerFilter implements GlobalFilter, Ordered {
 
     /**
      * 执行过滤逻辑
