@@ -6,8 +6,8 @@ spring:
     name: gateway-service
   cloud:
     gateway:
-      # 配置Gateway使用其能够自动定位从Eureka发现到的服务(不配置时使用默认的路由规则)
       discovery:
+        # 开启时, 会自动配置默认路由规则
         locator:
           enabled: true
           # 使用小写的服务ID(默认为大写): 配置后Gateway对大写的服务ID将不生效, 自定义的路由规则可以实现既大写又小写
