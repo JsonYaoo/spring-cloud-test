@@ -32,6 +32,9 @@ public class StreamSampleController {
     @Autowired
     private RequeueTopic requeueTopic;
 
+    @Autowired
+    private DlqTopic dlqTopic;
+
     /**
      * 测试广播: 写@RequestParams后, 如果value没变, 但入参名称变了还是可以保持请求报文入参不变, 便于维持前端代码不变
      * @param body
@@ -103,6 +106,21 @@ public class StreamSampleController {
 
         Message<MessageBean> message = MessageBuilder.withPayload(msg).build();
         requeueTopic.output().send(message);
+        log.info("发送完毕 {}" + message);
+    }
+
+    /**
+     * 测试Stream应用: 测试死信队列Topic
+     * @param body
+     */
+    @PostMapping("dlq")
+    public void dlq(@RequestParam(value = "body") String body){
+        MessageBean msg = new MessageBean();
+        msg.setPayload(body);
+        log.info("ready to send delayed message");
+
+        Message<MessageBean> message = MessageBuilder.withPayload(msg).build();
+        dlqTopic.output().send(message);
         log.info("发送完毕 {}" + message);
     }
 }

@@ -12,14 +12,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Stream测试应用: 测试消费者
  */
 @Slf4j
-// 绑定信道
+// 绑定信道, 单存的配置项, 可以在配置类中配置
 @EnableBinding(value = {
         Sink.class,
         BroadcastTopic.class,
         GroupTopic.class,
         DelayedTopic.class,
         ExceptionTopic.class,
-        RequeueTopic.class
+        RequeueTopic.class,
+        DlqTopic.class
 })
 public class StreamConsumer {
 
@@ -99,5 +100,24 @@ public class StreamConsumer {
         }
 
         throw new RuntimeException("I'm not OK!");
+    }
+
+    /**
+     * 测试死信队列Topic
+     * @param messageBean
+     */
+    @StreamListener(DlqTopic.INPUT)
+    public void consumerDlqTopic(MessageBean messageBean) {
+        log.info("DLQ: Are you OK?");
+
+        // 由于初始值为1, 所以只会重试2次就成功了
+        if(count.incrementAndGet() % 3 == 0){
+            // 死信队列重推消息到该队列时, 由于count已经大于3, 则会消费成功
+            log.info("DLQ: Fine, thank you. And you?");
+        } else {
+            // 当重试次数用完还是有异常, 则会一次性抛出所有异常, 进入死信队列, 否则如果最终能消费成功, 则不会抛出异常
+            log.info("DLQ: What's your problem?");
+            throw new RuntimeException("DLQ: I'm not OK!");
+        }
     }
 }
