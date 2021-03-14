@@ -2,11 +2,14 @@ package com.jsonyao.springcloud.biz;
 
 import com.jsonyao.springcloud.topic.BroadcastTopic;
 import com.jsonyao.springcloud.topic.DelayedTopic;
+import com.jsonyao.springcloud.topic.ExceptionTopic;
 import com.jsonyao.springcloud.topic.GroupTopic;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Stream测试应用: 测试消费者
@@ -17,9 +20,15 @@ import org.springframework.cloud.stream.messaging.Sink;
         Sink.class,
         BroadcastTopic.class,
         GroupTopic.class,
-        DelayedTopic.class
+        DelayedTopic.class,
+        ExceptionTopic.class
 })
 public class StreamConsumer {
+
+    /**
+     * 异常重试计数器
+     */
+    private AtomicInteger count = new AtomicInteger(1);
 
     /**
      * 快速入门: 测试消费者消费
@@ -56,5 +65,24 @@ public class StreamConsumer {
     @StreamListener(DelayedTopic.INPUT)
     public void consumerDelayedTopic(MessageBean messageBean) {
         log.info("Delayed message consumed successfully, payload={}", messageBean.getPayload());
+    }
+
+    /**
+     * 测试异常重试(单机版), 即在Consumer本地重试, 而不会发回给Rabbitmq
+     * @param messageBean
+     */
+    @StreamListener(ExceptionTopic.INPUT)
+    public void consumerExceptionTopic(MessageBean messageBean) {
+        log.info("Are you OK?");
+
+        // 由于初始值为1, 所以只会重试2次就成功了
+        if(count.incrementAndGet() % 3 == 0){
+            log.info("Fine, thank you. And you?");
+            // 清0, 下次重试测试时, 由于初始值是0, 当重试次数用完还是有异常, 则会一次性抛出所有异常, 否则如果最终能消费成功, 则不会抛出异常
+            count.set(0);
+        } else {
+            log.info("What's your problem?");
+            throw new RuntimeException("I'm not OK!");
+        }
     }
 }

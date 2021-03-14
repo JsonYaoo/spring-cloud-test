@@ -3,6 +3,7 @@ package com.jsonyao.springcloud.controller;
 import com.jsonyao.springcloud.biz.MessageBean;
 import com.jsonyao.springcloud.topic.BroadcastTopic;
 import com.jsonyao.springcloud.topic.DelayedTopic;
+import com.jsonyao.springcloud.topic.ExceptionTopic;
 import com.jsonyao.springcloud.topic.GroupTopic;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class StreamSampleController {
 
     @Autowired
     private DelayedTopic delayedTopic;
+
+    @Autowired
+    private ExceptionTopic exceptionTopic;
 
     /**
      * 测试广播: 写@RequestParams后, 如果value没变, 但入参名称变了还是可以保持请求报文入参不变, 便于维持前端代码不变
@@ -71,4 +75,20 @@ public class StreamSampleController {
 
         log.info("发送完毕 {}" + message);
     }
+
+    /**
+     * 测试异常重试(单机版), 即在Consumer本地重试, 而不会发回给Rabbitmq
+     * @param body
+     */
+    @PostMapping("sendException")
+    public void sendException(@RequestParam(value = "body") String body){
+        MessageBean msg = new MessageBean();
+        msg.setPayload(body);
+        log.info("ready to send delayed message");
+
+        Message<MessageBean> message = MessageBuilder.withPayload(msg).build();
+        exceptionTopic.output().send(message);
+        log.info("发送完毕 {}" + message);
+    }
+
 }
