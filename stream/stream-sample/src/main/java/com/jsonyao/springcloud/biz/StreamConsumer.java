@@ -1,6 +1,7 @@
 package com.jsonyao.springcloud.biz;
 
 import com.jsonyao.springcloud.topic.BroadcastTopic;
+import com.jsonyao.springcloud.topic.DelayedTopic;
 import com.jsonyao.springcloud.topic.GroupTopic;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -15,7 +16,8 @@ import org.springframework.cloud.stream.messaging.Sink;
 @EnableBinding(value = {
         Sink.class,
         BroadcastTopic.class,
-        GroupTopic.class
+        GroupTopic.class,
+        DelayedTopic.class
 })
 public class StreamConsumer {
 
@@ -45,5 +47,14 @@ public class StreamConsumer {
     @StreamListener(GroupTopic.INPUT)
     public void consumerGroupTopic(Object payload) {
         log.info("Group message consumed successfully, payload={}", payload);
+    }
+
+    /**
+     * 测试延迟消息
+     * @param messageBean
+     */
+    @StreamListener(DelayedTopic.INPUT)
+    public void consumerDelayedTopic(MessageBean messageBean) {
+        log.info("Delayed message consumed successfully, payload={}", messageBean.getPayload());
     }
 }
