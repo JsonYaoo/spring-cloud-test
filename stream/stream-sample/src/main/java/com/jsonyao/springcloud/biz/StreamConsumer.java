@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Header;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,7 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
         DelayedTopic.class,
         ExceptionTopic.class,
         RequeueTopic.class,
-        DlqTopic.class
+        DlqTopic.class,
+        FallbackTopic.class
 })
 public class StreamConsumer {
 
@@ -119,5 +123,35 @@ public class StreamConsumer {
             log.info("DLQ: What's your problem?");
             throw new RuntimeException("DLQ: I'm not OK!");
         }
+    }
+
+    /**
+     * 测试异常降级, 自定义异常逻辑 + 接口升版
+     * @param messageBean
+     */
+    @StreamListener(FallbackTopic.INPUT)
+    public void consumerFallbackTopic(MessageBean messageBean, @Header("version") String version) {
+        log.info("Fallback: Are you OK?");
+
+        // 接口升版: 可以根据不同的版本走不同的逻辑
+        if("1.0".equalsIgnoreCase(version)){
+            log.info("Fallback: Fine, thank you. And you?");
+        } else if("2.0".equalsIgnoreCase(version)){
+            // 当重试次数用完还是有异常, 则会一次性抛出所有异常, 进入具体异常降级逻辑, 否则如果最终能消费成功, 则不会抛出异常
+            log.info("Fallback: unsupported version?");
+            throw new RuntimeException("Fallback: I'm not OK!");
+        } else {
+            log.info("Fallback: version={}", version);
+        }
+    }
+
+    /**
+     * 具体异常降级逻辑
+     * @param message
+     */
+    // 当前方法用于处理MQTT消息, inputChannel参数指定了用于接收消息的channel
+    @ServiceActivator(inputChannel = "fallback-Topic.fallback-group.errors")
+    public void fallback(Message<?> message){
+        log.info("fallback entered, message={}", message);
     }
 }

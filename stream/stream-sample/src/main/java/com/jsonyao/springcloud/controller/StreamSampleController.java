@@ -35,6 +35,9 @@ public class StreamSampleController {
     @Autowired
     private DlqTopic dlqTopic;
 
+    @Autowired
+    private FallbackTopic fallbackTopic;
+
     /**
      * 测试广播: 写@RequestParams后, 如果value没变, 但入参名称变了还是可以保持请求报文入参不变, 便于维持前端代码不变
      * @param body
@@ -121,6 +124,26 @@ public class StreamSampleController {
 
         Message<MessageBean> message = MessageBuilder.withPayload(msg).build();
         dlqTopic.output().send(message);
+        log.info("发送完毕 {}" + message);
+    }
+
+    /**
+     * 测试Stream应用: 测试异常降级, 自定义异常逻辑 + 接口升版
+     * @param body
+     */
+    @PostMapping("fallback")
+    public void fallback(@RequestParam(value = "body") String body,
+                         @RequestParam(value = "version", defaultValue = "1.0") String version){
+        MessageBean msg = new MessageBean();
+        msg.setPayload(body);
+        log.info("ready to send delayed message");
+
+        // 设置接口版本: V1 => queue1, V2 => queue2
+        Message<MessageBean> message = MessageBuilder
+                .withPayload(msg)
+                .setHeader("version", version)
+                .build();
+        fallbackTopic.output().send(message);
         log.info("发送完毕 {}" + message);
     }
 }
