@@ -1,0 +1,32 @@
+package com.jsonyao.springcloud.controller;
+
+import com.jsonyao.springcloud.topic.BroadcastTopic;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 测试Stream应用: 前端控制器
+ */
+@RestController
+@Slf4j
+public class StreamSampleController {
+
+    @Autowired
+    private BroadcastTopic broadcastTopic;
+
+    /**
+     * 写@RequestParams后, 如果value没变, 但入参名称变了还是可以保持请求报文入参不变, 便于维持前端代码不变
+     * @param body
+     */
+    @PostMapping("send")
+    public void sendMessage(@RequestParam(value = "body") String body){
+        Message<String> message = MessageBuilder.withPayload(body).build();
+        broadcastTopic.output().send(message);
+        log.info("发送完毕 {}" + message);
+    }
+}
