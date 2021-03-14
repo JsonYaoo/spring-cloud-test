@@ -1,9 +1,6 @@
 package com.jsonyao.springcloud.biz;
 
-import com.jsonyao.springcloud.topic.BroadcastTopic;
-import com.jsonyao.springcloud.topic.DelayedTopic;
-import com.jsonyao.springcloud.topic.ExceptionTopic;
-import com.jsonyao.springcloud.topic.GroupTopic;
+import com.jsonyao.springcloud.topic.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -21,7 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
         BroadcastTopic.class,
         GroupTopic.class,
         DelayedTopic.class,
-        ExceptionTopic.class
+        ExceptionTopic.class,
+        RequeueTopic.class
 })
 public class StreamConsumer {
 
@@ -84,5 +82,22 @@ public class StreamConsumer {
             log.info("What's your problem?");
             throw new RuntimeException("I'm not OK!");
         }
+    }
+
+    /**
+     * 测试Stream应用: 测试异常重试(联机版), 消费者会重新生成把消息投递回队列尾部
+     * @param messageBean
+     */
+    @StreamListener(RequeueTopic.INPUT)
+    public void consumerRequeueTopic(MessageBean messageBean) {
+        log.info("Are you OK?");
+
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            // do nothing
+        }
+
+        throw new RuntimeException("I'm not OK!");
     }
 }

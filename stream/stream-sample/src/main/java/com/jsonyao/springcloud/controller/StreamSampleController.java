@@ -1,10 +1,7 @@
 package com.jsonyao.springcloud.controller;
 
 import com.jsonyao.springcloud.biz.MessageBean;
-import com.jsonyao.springcloud.topic.BroadcastTopic;
-import com.jsonyao.springcloud.topic.DelayedTopic;
-import com.jsonyao.springcloud.topic.ExceptionTopic;
-import com.jsonyao.springcloud.topic.GroupTopic;
+import com.jsonyao.springcloud.topic.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -31,6 +28,9 @@ public class StreamSampleController {
 
     @Autowired
     private ExceptionTopic exceptionTopic;
+
+    @Autowired
+    private RequeueTopic requeueTopic;
 
     /**
      * 测试广播: 写@RequestParams后, 如果value没变, 但入参名称变了还是可以保持请求报文入参不变, 便于维持前端代码不变
@@ -91,4 +91,18 @@ public class StreamSampleController {
         log.info("发送完毕 {}" + message);
     }
 
+    /**
+     * 测试Stream应用: 测试异常重试(联机版), 消费者会重新生成把消息投递回队列尾部
+     * @param body
+     */
+    @PostMapping("requeue")
+    public void requeue(@RequestParam(value = "body") String body){
+        MessageBean msg = new MessageBean();
+        msg.setPayload(body);
+        log.info("ready to send delayed message");
+
+        Message<MessageBean> message = MessageBuilder.withPayload(msg).build();
+        requeueTopic.output().send(message);
+        log.info("发送完毕 {}" + message);
+    }
 }
