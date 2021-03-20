@@ -11,7 +11,14 @@ import java.math.BigDecimal;
 @Data
 public class Product implements Serializable {
 
+    /**
+     * 商品名称
+     */
     private String name;
+
+    /**
+     * 商品价格
+     */
     private BigDecimal price;
 
 }
