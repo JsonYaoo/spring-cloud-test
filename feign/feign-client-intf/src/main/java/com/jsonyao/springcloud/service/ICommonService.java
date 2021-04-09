@@ -50,4 +50,11 @@ public interface ICommonService {
      */
     @PostMapping("/timeout")
     public String timeout(@RequestParam("timeout") int timeout);
+
+    /**
+     * Feign接口boolean返回值测试
+     * @return
+     */
+    @PostMapping("/boolean")
+    public boolean sayBoolean();
 }

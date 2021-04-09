@@ -78,4 +78,10 @@ public class FeignClientController implements ICommonService {
         log.info("You are interrupted!");
         return "retry: " + port;
     }
+
+    @Override
+    public boolean sayBoolean() {
+        log.info("boolean调通了!");
+        return false;
+    }
 }

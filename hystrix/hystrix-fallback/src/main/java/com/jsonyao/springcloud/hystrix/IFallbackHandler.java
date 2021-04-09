@@ -49,6 +49,12 @@ public class IFallbackHandler implements IHystrixFallbackService {
         return "You are late!";
     }
 
+    @Override
+    public boolean sayBoolean() {
+        log.warn("boolean 降级啦!!!");
+        return false;
+    }
+
     /**
      * 测试多级服务降级: 一级降级, 这里以直接异常降级为例
      * => 测试结果: 多级降级成功, 发现: Hystrix降级流程中, 如果抛出RuntimeException, 是不会被抛出去的, 所以控制台不会显示异常信息

@@ -48,4 +48,13 @@ public class FeignClientIntfConsumerController1 {
         // 超时到最后会抛出: feign.RetryableException
         return iCommonService.retry(timeout);
     }
+
+    /**
+     * Feign接口boolean返回值测试
+     * @return
+     */
+    @PostMapping("/boolean")
+    public boolean sayBoolean() {
+        return iCommonService.sayBoolean();
+    }
 }
