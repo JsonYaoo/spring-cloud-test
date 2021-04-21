@@ -39,6 +39,9 @@
         <module>dubbo/dubbo-api</module>
         <module>dubbo/dubbo-client</module>
         <module>dubbo/dubbo-consumer</module>
+        <module>seata/zoo-service</module>
+        <module>seata/fridge-service</module>
+        <module>seata/housekeeper-service</module>
     </modules>
     <packaging>pom</packaging>
 
