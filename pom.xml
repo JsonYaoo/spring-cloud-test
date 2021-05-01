@@ -42,6 +42,7 @@
         <module>seata/zoo-service</module>
         <module>seata/fridge-service</module>
         <module>seata/housekeeper-service</module>
+        <module>seata/seata-tcc-dubbo</module>
     </modules>
     <packaging>pom</packaging>
 
